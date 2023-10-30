@@ -72,6 +72,19 @@ export default function App() {
   const [checkboxChecked, setCheckboxChecked] = useState(false);
   const[applied , setApplied] = useState(false);
 
+  const resetState = () => {
+    // Reset the state to its initial values
+    state.current = null;
+    state.mode = 0;
+    state.selectedModels.clear();
+  };
+
+  const handleCancelClick = () => {
+    // Call the resetState function when the "Cancel" button is clicked
+    resetState();
+    setCheckboxChecked(false);
+    setApplied(false);
+  };
 
   return (
     <>
@@ -82,7 +95,7 @@ export default function App() {
       {checkboxChecked && (
         <div>
           <button onClick={() => setApplied(true)}>OK</button>
-          <button onClick={() => {setCheckboxChecked(false); setApplied(false)}}>Cancel</button>
+          <button onClick={handleCancelClick}>Cancel</button>
         </div>
       )}
       <Canvas camera={{ position: [0, -10, 80], fov: 50 }} dpr={[1, 2]}>
