@@ -7,7 +7,7 @@ import { proxy, useSnapshot } from 'valtio'
 const modes = ['translate', 'rotate', 'scale']
 const state = proxy({ current: null, mode: 0, selectedModels: new Set() })
 
-function Model({ name, checkboxChecked, ...props }) {
+function Model({ name, checkboxChecked,applied, ...props }) {
   // Ties this component to the state model
   const snap = useSnapshot(state)
   // Fetching the GLTF, nodes is a collection of all the meshes
@@ -17,7 +17,7 @@ function Model({ name, checkboxChecked, ...props }) {
   const [hovered, setHovered] = useState(false)
   const isSelected = snap.selectedModels.has(name)
   const isCurrent = snap.current === name
-  const setColor = checkboxChecked ? (isSelected ? 'green' : 'white') : (isCurrent ? '#ff6080' : 'white');
+  const setColor = checkboxChecked ? (isSelected ? 'green' :applied? 'red': 'white') : (isCurrent ? '#ff6080' : 'white');
 
   useCursor(hovered)
   return (
@@ -70,9 +70,8 @@ function Controls() {
 
 export default function App() {
   const [checkboxChecked, setCheckboxChecked] = useState(false);
-  const handleApply = () => {
-    // Apply color changes
-  };
+  const[applied , setApplied] = useState(false);
+
 
   return (
     <>
@@ -82,8 +81,8 @@ export default function App() {
       </label>
       {checkboxChecked && (
         <div>
-          <button onClick={handleApply}>OK</button>
-          <button onClick={() => setCheckboxChecked(false)}>Cancel</button>
+          <button onClick={() => setApplied(true)}>OK</button>
+          <button onClick={() => {setCheckboxChecked(false); setApplied(false)}}>Cancel</button>
         </div>
       )}
       <Canvas camera={{ position: [0, -10, 80], fov: 50 }} dpr={[1, 2]}>
@@ -91,16 +90,16 @@ export default function App() {
         <hemisphereLight color="#ffffff" groundColor="#b9b9b9" position={[-7, 25, 13]} intensity={0.85} />
         <Suspense fallback={null}>
           <group position={[0, 10, 0]}>
-            <Model name="Curly" position={[1, -11, -20]} rotation={[2, 0, -0]} checkboxChecked={checkboxChecked} />
-            <Model name="DNA" position={[20, 0, -17]} rotation={[1, 1, -2]} checkboxChecked={checkboxChecked} />
-            <Model name="Headphones" position={[20, 2, 4]} rotation={[1, 0, -1]} checkboxChecked={checkboxChecked} />
-            <Model name="Notebook" position={[-21, -15, -13]} rotation={[2, 0, 1]} checkboxChecked={checkboxChecked} />
-            <Model name="Rocket003" position={[18, 15, -25]} rotation={[1, 1, 0]} checkboxChecked={checkboxChecked} />
-            <Model name="Roundcube001" position={[-25, -4, 5]} rotation={[1, 0, 0]} scale={0.5} checkboxChecked={checkboxChecked} />
-            <Model name="Table" position={[1, -4, -28]} rotation={[1, 0, -1]} scale={0.5} checkboxChecked={checkboxChecked} />
-            <Model name="VR_Headset" position={[7, -15, 28]} rotation={[1, 0, -1]} scale={5} checkboxChecked={checkboxChecked} />
-            <Model name="Zeppelin" position={[-20, 10, 10]} rotation={[3, -1, 3]} scale={0.005} checkboxChecked={checkboxChecked} />
-            <ContactShadows rotation-x={Math.PI / 2} position={[0, -35, 0]} opacity={0.25} width={200} height={200} blur={1} far={50} checkboxChecked={checkboxChecked} />
+            <Model name="Curly" position={[1, -11, -20]} rotation={[2, 0, -0]} checkboxChecked={checkboxChecked}  applied={applied}/>
+            <Model name="DNA" position={[20, 0, -17]} rotation={[1, 1, -2]} checkboxChecked={checkboxChecked}  applied={applied}/>
+            <Model name="Headphones" position={[20, 2, 4]} rotation={[1, 0, -1]} checkboxChecked={checkboxChecked}  applied={applied}/>
+            <Model name="Notebook" position={[-21, -15, -13]} rotation={[2, 0, 1]} checkboxChecked={checkboxChecked}  applied={applied} />
+            <Model name="Rocket003" position={[18, 15, -25]} rotation={[1, 1, 0]} checkboxChecked={checkboxChecked}  applied={applied}/>
+            <Model name="Roundcube001" position={[-25, -4, 5]} rotation={[1, 0, 0]} scale={0.5} checkboxChecked={checkboxChecked}  applied={applied}/>
+            <Model name="Table" position={[1, -4, -28]} rotation={[1, 0, -1]} scale={0.5} checkboxChecked={checkboxChecked}  applied={applied}/>
+            <Model name="VR_Headset" position={[7, -15, 28]} rotation={[1, 0, -1]} scale={5} checkboxChecked={checkboxChecked} applied={applied}/>
+            <Model name="Zeppelin" position={[-20, 10, 10]} rotation={[3, -1, 3]} scale={0.005} checkboxChecked={checkboxChecked} applied={applied} />
+            <ContactShadows rotation-x={Math.PI / 2} position={[0, -35, 0]} opacity={0.25} width={200} height={200} blur={1} far={50} checkboxChecked={checkboxChecked} applied={applied} />
           </group>
         </Suspense>
         <Controls />
