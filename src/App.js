@@ -86,6 +86,21 @@ export default function App() {
     setApplied(false);
   };
 
+  const handleOKClick = () => {
+    // Check if the selected models are "Rocket003", "Table", and "DNA"
+    setApplied(true);
+    if (
+      state.selectedModels.size === 3 &&
+      state.selectedModels.has('Rocket003') &&
+      state.selectedModels.has('Table') &&
+      state.selectedModels.has('DNA')
+    ) {
+      // Redirect to google.com
+      console.log("yes")
+      window.location.href = 'https://www.google.com';
+    }
+  };
+
   return (
     <>
       <label>
@@ -94,7 +109,7 @@ export default function App() {
       </label>
       {checkboxChecked && (
         <div>
-          <button onClick={() => setApplied(true)}>OK</button>
+          <button onClick={handleOKClick}>OK</button>
           <button onClick={handleCancelClick}>Cancel</button>
         </div>
       )}
